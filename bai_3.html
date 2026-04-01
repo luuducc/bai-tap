@@ -66,6 +66,16 @@
       animation: shake 0.3s;
     }
 
+    .warning {
+      background-color: #fef3c7 !important;
+      /* soft yellow */
+      border-color: #f59e0b !important;
+      /* amber */
+      color: #92400e !important;
+      /* dark amber text */
+      animation: pulse 0.4s;
+    }
+
     @keyframes bounce {
 
       0%,
@@ -130,10 +140,10 @@
       <div class="flex items-center gap-4">
         <div
           class="bg-purple-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md">
-          3
+          ⭐
         </div>
         <h1 class="text-2xl font-bold text-gray-800">
-          Số <span class="text-yellow-500 font-black">?</span>
+          Điền dấu <span class="text-yellow-500 font-black">&gt; &lt; =</span>
         </h1>
       </div>
     </div>
@@ -142,176 +152,98 @@
       Mỗi vạch A, B, C trên thước chỉ số đo nào?
     </p>
 
-    <!-- Ruler Visualization -->
-    <div class="ruler-container mb-10">
-      <div class="ruler-image" id="ruler">
-        <div class="tick tick-large" style="left: 10%"></div>
-        <div class="label" style="left: 10%">8 dm</div>
-
-        <div class="tick tick-large" style="left: 30%"></div>
-        <div class="label" style="left: 30%">9 dm</div>
-
-        <div class="tick tick-large" style="left: 50%"></div>
-        <div class="label" style="left: 50%">A</div>
-
-        <div class="tick tick-large" style="left: 70%"></div>
-        <div class="label" style="left: 70%">B</div>
-
-        <div class="tick tick-large" style="left: 90%"></div>
-        <div class="label" style="left: 90%">C</div>
-
-        <script>
-          const ruler = document.getElementById("ruler")
-          for (let i = 12; i < 90; i += 2) {
-            if (i % 20 === 0 || i === 10) continue
-            const smallTick = document.createElement("div")
-            smallTick.className = "tick tick-small"
-            smallTick.style.left = i + "%"
-            ruler.appendChild(smallTick)
-          }
-        </script>
-      </div>
-    </div>
-
-    <!-- Input Section -->
-    <div class="grid gap-4 mb-8">
-      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all" id="row-A">
-        <span class="text-lg font-bold text-gray-700">Vạch A chỉ số đo:</span>
-        <div class="flex items-center gap-2">
-          <input type="number" id="inputA"
-            class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
-            placeholder="?" />
-          <span class="text-xl font-bold text-gray-500">dm</span>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all" id="row-B">
-        <span class="text-lg font-bold text-gray-700">Vạch B chỉ số đo:</span>
-        <div class="flex items-center gap-2">
-          <input type="number" id="inputB"
-            class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
-            placeholder="?" />
-          <span class="text-xl font-bold text-gray-500">dm</span>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all" id="row-C">
-        <span class="text-lg font-bold text-gray-700">Vạch C chỉ số đo:</span>
-        <div class="flex items-center gap-2">
-          <input type="number" id="inputC"
-            class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
-            placeholder="?" />
-          <span class="text-xl font-bold text-gray-500">dm</span>
-        </div>
-      </div>
-    </div>
-
+    <!-- Compare questions -->
     <div class="grid sm:grid-cols-4 lg:grid-cols-6 gap-8 mb-8">
-      <div class="incorrect flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
         <span>2</span>
 
-          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-            <option value="">?</option>
-            <option value="<">&lt;</option>
-            <option value=">">&gt;</option>
-            <option value="=">=</option>
-          </select>
+        <select id="select-1" onchange="onSelectChange('select-1')"
+          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+          <option value="">?</option>
+          <option value="<">&lt;</option>
+          <option value=">">&gt;</option>
+          <option value="=">=</option>
+        </select>
 
-          <span>4</span>
+        <span>4</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>4</span>
+
+        <select id="select-2" onchange="onSelectChange('select-2')"
+          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+          <option value="">?</option>
+          <option value="<">&lt;</option>
+          <option value=">">&gt;</option>
+          <option value="=">=</option>
+        </select>
+
+        <span>4</span>
       </div>
       <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
         <span>2</span>
 
-          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-            <option value="">?</option>
-            <option value="<">&lt;</option>
-            <option value=">">&gt;</option>
-            <option value="=">=</option>
-          </select>
+        <select id="select-3" onchange="onSelectChange('select-3')"
+          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+          <option value="">?</option>
+          <option value="<">&lt;</option>
+          <option value=">">&gt;</option>
+          <option value="=">=</option>
+        </select>
 
-          <span>4</span>
+        <span>3</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>5</span>
+
+        <select id="select-4" onchange="onSelectChange('select-4')"
+          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+          <option value="">?</option>
+          <option value="<">&lt;</option>
+          <option value=">">&gt;</option>
+          <option value="=">=</option>
+        </select>
+
+        <span>5</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>9</span>
+
+        <select id="select-5" onchange="onSelectChange('select-5')"
+          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+          <option value="">?</option>
+          <option value="<">&lt;</option>
+          <option value=">">&gt;</option>
+          <option value="=">=</option>
+        </select>
+
+        <span>2</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>3</span>
+
+        <select id="select-6" onchange="onSelectChange('select-6')"
+          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+          <option value="">?</option>
+          <option value="<">&lt;</option>
+          <option value=">">&gt;</option>
+          <option value="=">=</option>
+        </select>
+
+        <span>6</span>
       </div>
       <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
         <span>2</span>
 
-          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-            <option value="">?</option>
-            <option value="<">&lt;</option>
-            <option value=">">&gt;</option>
-            <option value="=">=</option>
-          </select>
+        <select id="select-7" onchange="onSelectChange('select-7')"
+          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+          <option value="">?</option>
+          <option value="<">&lt;</option>
+          <option value=">">&gt;</option>
+          <option value="=">=</option>
+        </select>
 
-          <span>4</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>2</span>
-
-          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-            <option value="">?</option>
-            <option value="<">&lt;</option>
-            <option value=">">&gt;</option>
-            <option value="=">=</option>
-          </select>
-
-          <span>4</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>2</span>
-
-          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-            <option value="">?</option>
-            <option value="<">&lt;</option>
-            <option value=">">&gt;</option>
-            <option value="=">=</option>
-          </select>
-
-          <span>4</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>2</span>
-
-          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-            <option value="">?</option>
-            <option value="<">&lt;</option>
-            <option value=">">&gt;</option>
-            <option value="=">=</option>
-          </select>
-
-          <span>4</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>2</span>
-
-          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-            <option value="">?</option>
-            <option value="<">&lt;</option>
-            <option value=">">&gt;</option>
-            <option value="=">=</option>
-          </select>
-
-          <span>4</span>
-      </div>
-    </div>
-
-    <!-- Compare Question -->
-    <div class="grid gap-4 mb-8">
-      <div class="flex items-center justify-between p-6 bg-gray-50 rounded-xl transition-all" id="row-compare">
-        <span class="text-xl font-bold text-gray-700">
-          Điền dấu thích hợp:
-        </span>
-
-        <div class="flex items-center gap-4 text-3xl font-black">
-          <span>2</span>
-
-          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-            <option value="">?</option>
-            <option value="<">&lt;</option>
-            <option value=">">&gt;</option>
-            <option value="=">=</option>
-          </select>
-
-          <span>4</span>
-        </div>
+        <span>1</span>
       </div>
     </div>
 
@@ -332,13 +264,52 @@
 
   <div id="confetti" class="confetti">✨🥳✨</div>
 
-  <!-- Hidden audio elements with the requested links -->
-  <audio id="audio-correct" src="https://tiengdong.com/wp-content/uploads/Tieng-ting-ting-chinh-xac.mp3"
-    preload="auto"></audio>
-  <audio id="audio-wrong" src="https://tiengdong.com/wp-content/uploads/Tieng-coi-bao-sai.mp3" preload="auto"></audio>
-
   <script>
     let audioCtx
+
+    const answers = { A: 10, B: 11, C: 12 }
+
+    const inputs2 = [
+      {
+        id: 'select-1',
+        val: document.getElementById('select-1').value,
+        ans: '<'
+      },
+      {
+        id: 'select-2',
+        val: document.getElementById('select-2').value,
+        ans: '='
+      },
+      {
+        id: 'select-3',
+        val: document.getElementById('select-3').value,
+        ans: '<'
+      },
+      {
+        id: 'select-4',
+        val: document.getElementById('select-4').value,
+        ans: '='
+      },
+      {
+        id: 'select-5',
+        val: document.getElementById('select-5').value,
+        ans: '>'
+      },
+      {
+        id: 'select-6',
+        val: document.getElementById('select-6').value,
+        ans: '<'
+      },
+      {
+        id: 'select-7',
+        val: document.getElementById('select-7').value,
+        ans: '>'
+      },
+    ]
+    
+    function onSelectChange(selectId) {
+      document.getElementById(selectId).classList.remove('correct', 'incorrect', 'warning')
+    }
 
     function initAudio() {
       if (!audioCtx) {
@@ -347,83 +318,122 @@
     }
 
     // Fallback sounds in case external links fail to load due to CORS/Network
-    function playFallbackSound(type) {
+    function playSound(type) {
       initAudio()
       const now = audioCtx.currentTime
-      if (type === "correct") {
-        const playTing = (time) => {
+
+      switch (type) {
+        case "correct": {
+          const playTing = (time) => {
+            const osc = audioCtx.createOscillator()
+            const gain = audioCtx.createGain()
+            osc.connect(gain)
+            gain.connect(audioCtx.destination)
+
+            osc.type = "sine"
+            osc.frequency.setValueAtTime(1046.5, time)
+            gain.gain.setValueAtTime(0.2, time)
+            gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3)
+
+            osc.start(time)
+            osc.stop(time + 0.3)
+          }
+
+          playTing(now)
+          playTing(now + 0.1)
+          break
+        }
+
+        case "warning": {
+          // softer, neutral notification (mid-high tone, short)
           const osc = audioCtx.createOscillator()
           const gain = audioCtx.createGain()
+
           osc.connect(gain)
           gain.connect(audioCtx.destination)
-          osc.type = "sine"
-          osc.frequency.setValueAtTime(1046.5, time)
-          gain.gain.setValueAtTime(0.2, time)
-          gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3)
-          osc.start(time)
-          osc.stop(time + 0.3)
+
+          osc.type = "triangle"
+          osc.frequency.setValueAtTime(600, now)
+          osc.frequency.linearRampToValueAtTime(800, now + 0.2)
+
+          gain.gain.setValueAtTime(0.15, now)
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25)
+
+          osc.start(now)
+          osc.stop(now + 0.25)
+          break
         }
-        playTing(now)
-        playTing(now + 0.1)
-      } else {
-        const osc = audioCtx.createOscillator()
-        const gain = audioCtx.createGain()
-        osc.type = "sawtooth"
-        osc.connect(gain)
-        gain.connect(audioCtx.destination)
-        osc.frequency.setValueAtTime(140, now)
-        osc.frequency.linearRampToValueAtTime(70, now + 0.4)
-        gain.gain.setValueAtTime(0.2, now)
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.4)
-        osc.start(now)
-        osc.stop(now + 0.4)
+
+        case "wrong":
+        default: {
+          const osc = audioCtx.createOscillator()
+          const gain = audioCtx.createGain()
+
+          osc.type = "sawtooth"
+          osc.connect(gain)
+          gain.connect(audioCtx.destination)
+
+          osc.frequency.setValueAtTime(140, now)
+          osc.frequency.linearRampToValueAtTime(70, now + 0.4)
+
+          gain.gain.setValueAtTime(0.2, now)
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.4)
+
+          osc.start(now)
+          osc.stop(now + 0.4)
+          break
+        }
       }
     }
 
-    function playSound(type) {
-      const audioEl = document.getElementById(
-        type === "correct" ? "audio-correct" : "audio-wrong",
-      )
+    // function playSound(type) {
+    //   const audioEl = document.getElementById(`audio-${type}`)
 
-      // Attempt to play the audio from the link
-      if (audioEl) {
-        audioEl.currentTime = 0
-        audioEl.play().catch((e) => {
-          console.log("External audio failed, using fallback:", e)
-          playFallbackSound(type)
-        })
-      } else {
-        playFallbackSound(type)
-      }
-    }
+    //   // Attempt to play the audio from the link
+    //   if (audioEl) {
+    //     audioEl.currentTime = 0
+    //     audioEl.play().catch((e) => {
+    //       console.log("External audio failed, using fallback:", e)
+    //       playFallbackSound(type)
+    //     })
+    //   } else {
+    //     playFallbackSound(type)
+    //   }
+    // }
 
-    const answers = { A: 10, B: 11, C: 12 }
 
     function checkAnswers() {
       if (audioCtx && audioCtx.state === "suspended") audioCtx.resume()
 
-      const inputs = [
-        {
-          id: "inputA",
-          val: parseInt(document.getElementById("inputA").value),
-          ans: answers.A,
-        },
-        {
-          id: "inputB",
-          val: parseInt(document.getElementById("inputB").value),
-          ans: answers.B,
-        },
-        {
-          id: "inputC",
-          val: parseInt(document.getElementById("inputC").value),
-          ans: answers.C,
-        },
-      ]
-
       let correctCount = 0
-      inputs.forEach((item) => {
+
+      const isAllAnswered = inputs2.every(item => {
+        return document.getElementById(item.id).value
+      })
+
+      const msg = document.getElementById("message")
+      msg.style.transform = "scale(1)"
+
+      if (!isAllAnswered) {
+        inputs2.forEach((item) => {
+          const el = document.getElementById(item.id)
+          if (!el.value) {
+            el.classList.add("warning")
+          }
+        })
+        playSound("warning")
+        msg.textContent = "HÃY ĐIỀN HẾT CÂU TRẢ LỜI! ⚠️"
+        msg.className =
+          "mt-8 text-center text-3xl font-black text-amber-600 transition-all transform scale-100"
+        return
+      }
+
+      inputs2.forEach((item) => {
         const el = document.getElementById(item.id)
-        if (item.val === item.ans) {
+
+        console.log('here', el.value)
+        console.log('here2', item.ans)
+        if (el.value === item.ans) {
           el.classList.add("correct")
           el.classList.remove("incorrect")
           correctCount++
@@ -433,10 +443,7 @@
         }
       })
 
-      const msg = document.getElementById("message")
-      msg.style.transform = "scale(1)"
-
-      if (correctCount === 3) {
+      if (correctCount === inputs2.length) {
         playSound("correct")
         msg.textContent = "CHÍNH XÁC! GIỎI QUÁ! 🌟"
         msg.className =
@@ -451,11 +458,12 @@
     }
 
     function resetApp() {
-      ;["inputA", "inputB", "inputC"].forEach((id) => {
+      inputs2.forEach(({ id }) => {
         const el = document.getElementById(id)
         el.value = ""
-        el.classList.remove("correct", "incorrect")
+        el.classList.remove("correct", "incorrect", 'warning')
       })
+
       document.getElementById("message").style.transform = "scale(0)"
       document.getElementById("confetti").style.display = "none"
     }
