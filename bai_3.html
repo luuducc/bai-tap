@@ -149,12 +149,12 @@
     </div>
 
     <p class="text-lg text-gray-700 mb-8 font-medium">
-      Mỗi vạch A, B, C trên thước chỉ số đo nào?
+      Hãy so sánh các số sau:
     </p>
 
     <!-- Compare questions -->
-    <div class="grid sm:grid-cols-4 lg:grid-cols-6 gap-8 mb-8">
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+    <div id="quiz-container" class="grid sm:grid-cols-4 lg:grid-cols-6 gap-8 mb-8">
+      <!-- <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
         <span>2</span>
 
         <select id="select-1" onchange="onSelectChange('select-1')"
@@ -166,85 +166,7 @@
         </select>
 
         <span>4</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>4</span>
-
-        <select id="select-2" onchange="onSelectChange('select-2')"
-          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-          <option value="">?</option>
-          <option value="<">&lt;</option>
-          <option value=">">&gt;</option>
-          <option value="=">=</option>
-        </select>
-
-        <span>4</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>2</span>
-
-        <select id="select-3" onchange="onSelectChange('select-3')"
-          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-          <option value="">?</option>
-          <option value="<">&lt;</option>
-          <option value=">">&gt;</option>
-          <option value="=">=</option>
-        </select>
-
-        <span>3</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>5</span>
-
-        <select id="select-4" onchange="onSelectChange('select-4')"
-          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-          <option value="">?</option>
-          <option value="<">&lt;</option>
-          <option value=">">&gt;</option>
-          <option value="=">=</option>
-        </select>
-
-        <span>5</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>9</span>
-
-        <select id="select-5" onchange="onSelectChange('select-5')"
-          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-          <option value="">?</option>
-          <option value="<">&lt;</option>
-          <option value=">">&gt;</option>
-          <option value="=">=</option>
-        </select>
-
-        <span>2</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>3</span>
-
-        <select id="select-6" onchange="onSelectChange('select-6')"
-          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-          <option value="">?</option>
-          <option value="<">&lt;</option>
-          <option value=">">&gt;</option>
-          <option value="=">=</option>
-        </select>
-
-        <span>6</span>
-      </div>
-      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>2</span>
-
-        <select id="select-7" onchange="onSelectChange('select-7')"
-          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-          <option value="">?</option>
-          <option value="<">&lt;</option>
-          <option value=">">&gt;</option>
-          <option value="=">=</option>
-        </select>
-
-        <span>1</span>
-      </div>
+      </div> -->
     </div>
 
     <!-- Nộp bài -->
@@ -269,46 +191,45 @@
 
     const answers = { A: 10, B: 11, C: 12 }
 
-    const inputs2 = [
-      {
-        id: 'select-1',
-        val: document.getElementById('select-1').value,
-        ans: '<'
-      },
-      {
-        id: 'select-2',
-        val: document.getElementById('select-2').value,
-        ans: '='
-      },
-      {
-        id: 'select-3',
-        val: document.getElementById('select-3').value,
-        ans: '<'
-      },
-      {
-        id: 'select-4',
-        val: document.getElementById('select-4').value,
-        ans: '='
-      },
-      {
-        id: 'select-5',
-        val: document.getElementById('select-5').value,
-        ans: '>'
-      },
-      {
-        id: 'select-6',
-        val: document.getElementById('select-6').value,
-        ans: '<'
-      },
-      {
-        id: 'select-7',
-        val: document.getElementById('select-7').value,
-        ans: '>'
-      },
+    const inputs = [
+      { id: "select-1", op1: 2, op2: 4, ans: "<" },
+      { id: "select-2", op1: 4, op2: 4, ans: "=" },
+      { id: "select-3", op1: 2, op2: 3, ans: "<" },
+      { id: "select-4", op1: 5, op2: 5, ans: "=" },
+      { id: "select-5", op1: 9, op2: 2, ans: ">" },
+      { id: "select-6", op1: 3, op2: 6, ans: "<" },
+      { id: "select-7", op1: 2, op2: 1, ans: ">" },
     ]
-    
+
+    renderQuiz()
+
+    function renderQuiz() {
+      const container = document.getElementById("quiz-container")
+
+      container.innerHTML = inputs.map(({ id, op1, op2 }) => `
+        <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+          <span>${op1}</span>
+
+          <select id="${id}" onchange="onSelectChange('${id}')"
+            class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>${op2}</span>
+        </div>
+      `).join("")
+    }
+
     function onSelectChange(selectId) {
-      document.getElementById(selectId).classList.remove('correct', 'incorrect', 'warning')
+      inputs.forEach(({id}) => {
+        document.getElementById(id).classList.remove('correct', 'incorrect', 'warning')
+      })
+
+      document.getElementById("message").style.transform = "scale(0)"
+      document.getElementById("confetti").style.display = "none"
     }
 
     function initAudio() {
@@ -386,28 +307,12 @@
       }
     }
 
-    // function playSound(type) {
-    //   const audioEl = document.getElementById(`audio-${type}`)
-
-    //   // Attempt to play the audio from the link
-    //   if (audioEl) {
-    //     audioEl.currentTime = 0
-    //     audioEl.play().catch((e) => {
-    //       console.log("External audio failed, using fallback:", e)
-    //       playFallbackSound(type)
-    //     })
-    //   } else {
-    //     playFallbackSound(type)
-    //   }
-    // }
-
-
     function checkAnswers() {
       if (audioCtx && audioCtx.state === "suspended") audioCtx.resume()
 
       let correctCount = 0
 
-      const isAllAnswered = inputs2.every(item => {
+      const isAllAnswered = inputs.every(item => {
         return document.getElementById(item.id).value
       })
 
@@ -415,7 +320,7 @@
       msg.style.transform = "scale(1)"
 
       if (!isAllAnswered) {
-        inputs2.forEach((item) => {
+        inputs.forEach((item) => {
           const el = document.getElementById(item.id)
           if (!el.value) {
             el.classList.add("warning")
@@ -428,7 +333,7 @@
         return
       }
 
-      inputs2.forEach((item) => {
+      inputs.forEach((item) => {
         const el = document.getElementById(item.id)
 
         console.log('here', el.value)
@@ -443,7 +348,7 @@
         }
       })
 
-      if (correctCount === inputs2.length) {
+      if (correctCount === inputs.length) {
         playSound("correct")
         msg.textContent = "CHÍNH XÁC! GIỎI QUÁ! 🌟"
         msg.className =
@@ -458,7 +363,7 @@
     }
 
     function resetApp() {
-      inputs2.forEach(({ id }) => {
+      inputs.forEach(({ id }) => {
         const el = document.getElementById(id)
         el.value = ""
         el.classList.remove("correct", "incorrect", 'warning')
