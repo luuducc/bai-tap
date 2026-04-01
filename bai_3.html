@@ -106,7 +106,7 @@
 
     .confetti {
       position: fixed;
-      top: 50%;
+      top: 20%;
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 5rem;
@@ -134,7 +134,7 @@
 </head>
 
 <body class="bg-blue-50 min-h-screen flex items-center justify-center p-4">
-  <div class="max-w-5xl w-full bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+  <div class="max-w-6xl w-full bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
     <!-- Đề bài -->
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center gap-4">
@@ -171,11 +171,11 @@
 
     <!-- Nộp bài -->
     <div class="flex gap-4">
-      <button onclick="checkAnswers()"
+      <button id="submit-btn"
         class="flex-[2] bg-purple-600 hover:bg-purple-700 text-white font-black py-5 rounded-2xl shadow-xl text-xl transition-all active:scale-95">
         KIỂM TRA NGAY
       </button>
-      <button onclick="resetApp()"
+      <button id="reset-btn"
         class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-5 rounded-2xl active:scale-95">
         LÀM LẠI
       </button>
@@ -186,31 +186,32 @@
 
   <div id="confetti" class="confetti">✨🥳✨</div>
 
-  <script>
+  <script type="module">
+    import { rawInputs } from './raw_input.js'
+
+    document.getElementById("submit-btn").addEventListener("click", checkAnswers)
+    document.getElementById("reset-btn").addEventListener("click", resetApp)
     let audioCtx
 
-    const answers = { A: 10, B: 11, C: 12 }
-
-    const inputs = [
-      { id: "select-1", op1: 2, op2: 4, ans: "<" },
-      { id: "select-2", op1: 4, op2: 4, ans: "=" },
-      { id: "select-3", op1: 2, op2: 3, ans: "<" },
-      { id: "select-4", op1: 5, op2: 5, ans: "=" },
-      { id: "select-5", op1: 9, op2: 2, ans: ">" },
-      { id: "select-6", op1: 3, op2: 6, ans: "<" },
-      { id: "select-7", op1: 2, op2: 1, ans: ">" },
-    ]
+    const inputs = rawInputs.map((item, index) => ({
+      id: `select-${index}`,
+      ...item
+    }))
 
     renderQuiz()
+
+    inputs.forEach(({ id }) => {
+      document.getElementById(id).addEventListener('change', id => onSelectChange(id))
+    })
 
     function renderQuiz() {
       const container = document.getElementById("quiz-container")
 
       container.innerHTML = inputs.map(({ id, op1, op2 }) => `
-        <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <div class="flex px-1 py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-100 rounded-xl">
           <span>${op1}</span>
 
-          <select id="${id}" onchange="onSelectChange('${id}')"
+          <select id="${id}"
             class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
             <option value="">?</option>
             <option value="<">&lt;</option>
