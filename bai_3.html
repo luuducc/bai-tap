@@ -1,413 +1,473 @@
 <!doctype html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bài Tập Đo Độ Dài - Âm Thanh Từ Link</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      .ruler-container {
-        background-color: #f0f9ff;
-        border-radius: 15px;
-        padding: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      }
-      .ruler-image {
-        background-color: #ff99bb;
-        height: 60px;
-        border-radius: 30px;
-        display: flex;
-        align-items: center;
-        padding: 0 20px;
-        position: relative;
-        margin: 40px 0;
-      }
-      .tick {
-        width: 2px;
-        background-color: #333;
-        position: absolute;
-      }
-      .tick-large {
-        height: 30px;
-      }
-      .tick-small {
-        height: 15px;
-      }
 
-      .label {
-        position: absolute;
-        top: -35px;
-        font-weight: bold;
-        font-size: 1.2rem;
-        transform: translateX(-50%);
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bài Tập</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .ruler-container {
+      background-color: #f0f9ff;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
 
-      input:focus {
-        outline: none;
-        /* ring: 2px solid #3b82f6; */
-      }
+    .ruler-image {
+      background-color: #ff99bb;
+      height: 60px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      position: relative;
+      margin: 40px 0;
+    }
 
-      .correct {
-        background-color: #d1fae5 !important;
-        border-color: #10b981 !important;
-        color: #065f46 !important;
-        animation: bounce 0.5s;
-      }
+    .tick {
+      width: 2px;
+      background-color: #333;
+      position: absolute;
+    }
 
-      .incorrect {
-        background-color: #fee2e2 !important;
-        border-color: #ef4444 !important;
-        color: #991b1b !important;
-        animation: shake 0.3s;
-      }
+    .tick-large {
+      height: 30px;
+    }
 
-      @keyframes bounce {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-      }
+    .tick-small {
+      height: 15px;
+    }
 
-      @keyframes shake {
-        0%,
-        100% {
-          transform: translateX(0);
-        }
-        25% {
-          transform: translateX(-8px);
-        }
-        75% {
-          transform: translateX(8px);
-        }
+    .label {
+      position: absolute;
+      top: -35px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      transform: translateX(-50%);
+    }
+
+    input:focus {
+      outline: none;
+      /* ring: 2px solid #3b82f6; */
+    }
+
+    .correct {
+      background-color: #d1fae5 !important;
+      border-color: #10b981 !important;
+      color: #065f46 !important;
+      animation: bounce 0.5s;
+    }
+
+    .incorrect {
+      background-color: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #991b1b !important;
+      animation: shake 0.3s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
       }
 
-      .confetti {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 5rem;
-        z-index: 50;
-        display: none;
-        pointer-events: none;
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
       }
 
-      .custom-select {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background: none; /* remove default styling */
-        cursor: pointer;
-
-        padding: 0; /* remove default padding */
-        text-align: center; /* horizontal center */
-        line-height: 3rem; /* match height (h-12 = 48px ≈ 3rem) */
+      25% {
+        transform: translateX(-8px);
       }
-    </style>
-  </head>
-  <body class="bg-blue-50 min-h-screen flex items-center justify-center p-4">
-    <div
-      class="max-w-3xl w-full bg-white rounded-2xl shadow-2xl p-8 border border-gray-100"
-    >
-      <!-- Đề bài -->
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-4">
-          <div
-            class="bg-purple-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md"
-          >
-            3
-          </div>
-          <h1 class="text-2xl font-bold text-gray-800">
-            Số <span class="text-yellow-500 font-black">?</span>
-          </h1>
-        </div>
-      </div>
 
-      <p class="text-lg text-gray-700 mb-8 font-medium">
-        Mỗi vạch A, B, C trên thước chỉ số đo nào?
-      </p>
+      75% {
+        transform: translateX(8px);
+      }
+    }
 
-      <!-- Ruler Visualization -->
-      <div class="ruler-container mb-10">
-        <div class="ruler-image" id="ruler">
-          <div class="tick tick-large" style="left: 10%"></div>
-          <div class="label" style="left: 10%">8 dm</div>
+    .confetti {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 5rem;
+      z-index: 50;
+      display: none;
+      pointer-events: none;
+    }
 
-          <div class="tick tick-large" style="left: 30%"></div>
-          <div class="label" style="left: 30%">9 dm</div>
+    .custom-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: none;
+      /* remove default styling */
+      cursor: pointer;
 
-          <div class="tick tick-large" style="left: 50%"></div>
-          <div class="label" style="left: 50%">A</div>
+      padding: 0;
+      /* remove default padding */
+      text-align: center;
+      /* horizontal center */
+      line-height: 3rem;
+      /* match height (h-12 = 48px ≈ 3rem) */
+    }
+  </style>
+</head>
 
-          <div class="tick tick-large" style="left: 70%"></div>
-          <div class="label" style="left: 70%">B</div>
-
-          <div class="tick tick-large" style="left: 90%"></div>
-          <div class="label" style="left: 90%">C</div>
-
-          <script>
-            const ruler = document.getElementById("ruler")
-            for (let i = 12; i < 90; i += 2) {
-              if (i % 20 === 0 || i === 10) continue
-              const smallTick = document.createElement("div")
-              smallTick.className = "tick tick-small"
-              smallTick.style.left = i + "%"
-              ruler.appendChild(smallTick)
-            }
-          </script>
-        </div>
-      </div>
-
-      <!-- Input Section -->
-      <div class="grid gap-4 mb-8">
+<body class="bg-blue-50 min-h-screen flex items-center justify-center p-4">
+  <div class="max-w-5xl w-full bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+    <!-- Đề bài -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-4">
         <div
-          class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all"
-          id="row-A"
-        >
-          <span class="text-lg font-bold text-gray-700">Vạch A chỉ số đo:</span>
-          <div class="flex items-center gap-2">
-            <input
-              type="number"
-              id="inputA"
-              class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
-              placeholder="?"
-            />
-            <span class="text-xl font-bold text-gray-500">dm</span>
-          </div>
+          class="bg-purple-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl shadow-md">
+          3
         </div>
-
-        <div
-          class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all"
-          id="row-B"
-        >
-          <span class="text-lg font-bold text-gray-700">Vạch B chỉ số đo:</span>
-          <div class="flex items-center gap-2">
-            <input
-              type="number"
-              id="inputB"
-              class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
-              placeholder="?"
-            />
-            <span class="text-xl font-bold text-gray-500">dm</span>
-          </div>
-        </div>
-
-        <div
-          class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all"
-          id="row-C"
-        >
-          <span class="text-lg font-bold text-gray-700">Vạch C chỉ số đo:</span>
-          <div class="flex items-center gap-2">
-            <input
-              type="number"
-              id="inputC"
-              class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
-              placeholder="?"
-            />
-            <span class="text-xl font-bold text-gray-500">dm</span>
-          </div>
-        </div>
+        <h1 class="text-2xl font-bold text-gray-800">
+          Số <span class="text-yellow-500 font-black">?</span>
+        </h1>
       </div>
-
-      <!-- Compare Question -->
-      <div class="p-6 bg-gray-50 rounded-xl transition-all border">
-        hihi
-      </div>
-      <div class="grid gap-4 mb-8">
-        <div
-          class="flex items-center justify-between p-6 bg-gray-50 rounded-xl transition-all"
-          id="row-compare"
-        >
-          <span class="text-xl font-bold text-gray-700">
-            Điền dấu thích hợp:
-          </span>
-
-          <div class="flex items-center gap-4 text-3xl font-black">
-            <span>2</span>
-
-            <select
-              class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none"
-            >
-              <option value="">?</option>
-              <option value="<">&lt;</option>
-              <option value=">">&gt;</option>
-              <option value="=">=</option>
-            </select>
-
-            <span>4</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Nộp bài -->
-      <div class="flex gap-4">
-        <button
-          onclick="checkAnswers()"
-          class="flex-[2] bg-purple-600 hover:bg-purple-700 text-white font-black py-5 rounded-2xl shadow-xl text-xl transition-all active:scale-95"
-        >
-          KIỂM TRA NGAY
-        </button>
-        <button
-          onclick="resetApp()"
-          class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-5 rounded-2xl active:scale-95"
-        >
-          LÀM LẠI
-        </button>
-      </div>
-
-      <div
-        id="message"
-        class="mt-8 text-center text-3xl font-black transition-all transform scale-0"
-      ></div>
     </div>
 
-    <div id="confetti" class="confetti">✨🥳✨</div>
+    <p class="text-lg text-gray-700 mb-8 font-medium">
+      Mỗi vạch A, B, C trên thước chỉ số đo nào?
+    </p>
 
-    <!-- Hidden audio elements with the requested links -->
-    <audio
-      id="audio-correct"
-      src="https://tiengdong.com/wp-content/uploads/Tieng-ting-ting-chinh-xac.mp3"
-      preload="auto"
-    ></audio>
-    <audio
-      id="audio-wrong"
-      src="https://tiengdong.com/wp-content/uploads/Tieng-coi-bao-sai.mp3"
-      preload="auto"
-    ></audio>
+    <!-- Ruler Visualization -->
+    <div class="ruler-container mb-10">
+      <div class="ruler-image" id="ruler">
+        <div class="tick tick-large" style="left: 10%"></div>
+        <div class="label" style="left: 10%">8 dm</div>
 
-    <script>
-      let audioCtx
+        <div class="tick tick-large" style="left: 30%"></div>
+        <div class="label" style="left: 30%">9 dm</div>
 
-      function initAudio() {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-        }
-      }
+        <div class="tick tick-large" style="left: 50%"></div>
+        <div class="label" style="left: 50%">A</div>
 
-      // Fallback sounds in case external links fail to load due to CORS/Network
-      function playFallbackSound(type) {
-        initAudio()
-        const now = audioCtx.currentTime
-        if (type === "correct") {
-          const playTing = (time) => {
-            const osc = audioCtx.createOscillator()
-            const gain = audioCtx.createGain()
-            osc.connect(gain)
-            gain.connect(audioCtx.destination)
-            osc.type = "sine"
-            osc.frequency.setValueAtTime(1046.5, time)
-            gain.gain.setValueAtTime(0.2, time)
-            gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3)
-            osc.start(time)
-            osc.stop(time + 0.3)
+        <div class="tick tick-large" style="left: 70%"></div>
+        <div class="label" style="left: 70%">B</div>
+
+        <div class="tick tick-large" style="left: 90%"></div>
+        <div class="label" style="left: 90%">C</div>
+
+        <script>
+          const ruler = document.getElementById("ruler")
+          for (let i = 12; i < 90; i += 2) {
+            if (i % 20 === 0 || i === 10) continue
+            const smallTick = document.createElement("div")
+            smallTick.className = "tick tick-small"
+            smallTick.style.left = i + "%"
+            ruler.appendChild(smallTick)
           }
-          playTing(now)
-          playTing(now + 0.1)
-        } else {
+        </script>
+      </div>
+    </div>
+
+    <!-- Input Section -->
+    <div class="grid gap-4 mb-8">
+      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all" id="row-A">
+        <span class="text-lg font-bold text-gray-700">Vạch A chỉ số đo:</span>
+        <div class="flex items-center gap-2">
+          <input type="number" id="inputA"
+            class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
+            placeholder="?" />
+          <span class="text-xl font-bold text-gray-500">dm</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all" id="row-B">
+        <span class="text-lg font-bold text-gray-700">Vạch B chỉ số đo:</span>
+        <div class="flex items-center gap-2">
+          <input type="number" id="inputB"
+            class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
+            placeholder="?" />
+          <span class="text-xl font-bold text-gray-500">dm</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all" id="row-C">
+        <span class="text-lg font-bold text-gray-700">Vạch C chỉ số đo:</span>
+        <div class="flex items-center gap-2">
+          <input type="number" id="inputC"
+            class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
+            placeholder="?" />
+          <span class="text-xl font-bold text-gray-500">dm</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-4 lg:grid-cols-6 gap-8 mb-8">
+      <div class="incorrect flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>2</span>
+
+          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>4</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>2</span>
+
+          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>4</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>2</span>
+
+          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>4</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>2</span>
+
+          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>4</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>2</span>
+
+          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>4</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>2</span>
+
+          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>4</span>
+      </div>
+      <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
+        <span>2</span>
+
+          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>4</span>
+      </div>
+    </div>
+
+    <!-- Compare Question -->
+    <div class="grid gap-4 mb-8">
+      <div class="flex items-center justify-between p-6 bg-gray-50 rounded-xl transition-all" id="row-compare">
+        <span class="text-xl font-bold text-gray-700">
+          Điền dấu thích hợp:
+        </span>
+
+        <div class="flex items-center gap-4 text-3xl font-black">
+          <span>2</span>
+
+          <select class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
+            <option value="">?</option>
+            <option value="<">&lt;</option>
+            <option value=">">&gt;</option>
+            <option value="=">=</option>
+          </select>
+
+          <span>4</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nộp bài -->
+    <div class="flex gap-4">
+      <button onclick="checkAnswers()"
+        class="flex-[2] bg-purple-600 hover:bg-purple-700 text-white font-black py-5 rounded-2xl shadow-xl text-xl transition-all active:scale-95">
+        KIỂM TRA NGAY
+      </button>
+      <button onclick="resetApp()"
+        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-5 rounded-2xl active:scale-95">
+        LÀM LẠI
+      </button>
+    </div>
+
+    <div id="message" class="mt-8 text-center text-3xl font-black transition-all transform scale-0"></div>
+  </div>
+
+  <div id="confetti" class="confetti">✨🥳✨</div>
+
+  <!-- Hidden audio elements with the requested links -->
+  <audio id="audio-correct" src="https://tiengdong.com/wp-content/uploads/Tieng-ting-ting-chinh-xac.mp3"
+    preload="auto"></audio>
+  <audio id="audio-wrong" src="https://tiengdong.com/wp-content/uploads/Tieng-coi-bao-sai.mp3" preload="auto"></audio>
+
+  <script>
+    let audioCtx
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+      }
+    }
+
+    // Fallback sounds in case external links fail to load due to CORS/Network
+    function playFallbackSound(type) {
+      initAudio()
+      const now = audioCtx.currentTime
+      if (type === "correct") {
+        const playTing = (time) => {
           const osc = audioCtx.createOscillator()
           const gain = audioCtx.createGain()
-          osc.type = "sawtooth"
           osc.connect(gain)
           gain.connect(audioCtx.destination)
-          osc.frequency.setValueAtTime(140, now)
-          osc.frequency.linearRampToValueAtTime(70, now + 0.4)
-          gain.gain.setValueAtTime(0.2, now)
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.4)
-          osc.start(now)
-          osc.stop(now + 0.4)
+          osc.type = "sine"
+          osc.frequency.setValueAtTime(1046.5, time)
+          gain.gain.setValueAtTime(0.2, time)
+          gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3)
+          osc.start(time)
+          osc.stop(time + 0.3)
         }
+        playTing(now)
+        playTing(now + 0.1)
+      } else {
+        const osc = audioCtx.createOscillator()
+        const gain = audioCtx.createGain()
+        osc.type = "sawtooth"
+        osc.connect(gain)
+        gain.connect(audioCtx.destination)
+        osc.frequency.setValueAtTime(140, now)
+        osc.frequency.linearRampToValueAtTime(70, now + 0.4)
+        gain.gain.setValueAtTime(0.2, now)
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.4)
+        osc.start(now)
+        osc.stop(now + 0.4)
       }
+    }
 
-      function playSound(type) {
-        const audioEl = document.getElementById(
-          type === "correct" ? "audio-correct" : "audio-wrong",
-        )
+    function playSound(type) {
+      const audioEl = document.getElementById(
+        type === "correct" ? "audio-correct" : "audio-wrong",
+      )
 
-        // Attempt to play the audio from the link
-        if (audioEl) {
-          audioEl.currentTime = 0
-          audioEl.play().catch((e) => {
-            console.log("External audio failed, using fallback:", e)
-            playFallbackSound(type)
-          })
-        } else {
+      // Attempt to play the audio from the link
+      if (audioEl) {
+        audioEl.currentTime = 0
+        audioEl.play().catch((e) => {
+          console.log("External audio failed, using fallback:", e)
           playFallbackSound(type)
-        }
-      }
-
-      const answers = { A: 10, B: 11, C: 12 }
-
-      function checkAnswers() {
-        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume()
-
-        const inputs = [
-          {
-            id: "inputA",
-            val: parseInt(document.getElementById("inputA").value),
-            ans: answers.A,
-          },
-          {
-            id: "inputB",
-            val: parseInt(document.getElementById("inputB").value),
-            ans: answers.B,
-          },
-          {
-            id: "inputC",
-            val: parseInt(document.getElementById("inputC").value),
-            ans: answers.C,
-          },
-        ]
-
-        let correctCount = 0
-        inputs.forEach((item) => {
-          const el = document.getElementById(item.id)
-          if (item.val === item.ans) {
-            el.classList.add("correct")
-            el.classList.remove("incorrect")
-            correctCount++
-          } else {
-            el.classList.add("incorrect")
-            el.classList.remove("correct")
-          }
         })
+      } else {
+        playFallbackSound(type)
+      }
+    }
 
-        const msg = document.getElementById("message")
-        msg.style.transform = "scale(1)"
+    const answers = { A: 10, B: 11, C: 12 }
 
-        if (correctCount === 3) {
-          playSound("correct")
-          msg.textContent = "CHÍNH XÁC! GIỎI QUÁ! 🌟"
-          msg.className =
-            "mt-8 text-center text-3xl font-black text-green-600 transition-all transform scale-100"
-          showConfetti()
+    function checkAnswers() {
+      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume()
+
+      const inputs = [
+        {
+          id: "inputA",
+          val: parseInt(document.getElementById("inputA").value),
+          ans: answers.A,
+        },
+        {
+          id: "inputB",
+          val: parseInt(document.getElementById("inputB").value),
+          ans: answers.B,
+        },
+        {
+          id: "inputC",
+          val: parseInt(document.getElementById("inputC").value),
+          ans: answers.C,
+        },
+      ]
+
+      let correctCount = 0
+      inputs.forEach((item) => {
+        const el = document.getElementById(item.id)
+        if (item.val === item.ans) {
+          el.classList.add("correct")
+          el.classList.remove("incorrect")
+          correctCount++
         } else {
-          playSound("wrong")
-          msg.textContent = "SAI RỒI! THỬ LẠI NHÉ! ❌"
-          msg.className =
-            "mt-8 text-center text-3xl font-black text-red-500 transition-all transform scale-100"
+          el.classList.add("incorrect")
+          el.classList.remove("correct")
         }
-      }
+      })
 
-      function resetApp() {
-        ;["inputA", "inputB", "inputC"].forEach((id) => {
-          const el = document.getElementById(id)
-          el.value = ""
-          el.classList.remove("correct", "incorrect")
-        })
-        document.getElementById("message").style.transform = "scale(0)"
-        document.getElementById("confetti").style.display = "none"
-      }
+      const msg = document.getElementById("message")
+      msg.style.transform = "scale(1)"
 
-      function showConfetti() {
-        const c = document.getElementById("confetti")
-        c.style.display = "block"
-        setTimeout(() => {
-          c.style.display = "none"
-        }, 2000)
+      if (correctCount === 3) {
+        playSound("correct")
+        msg.textContent = "CHÍNH XÁC! GIỎI QUÁ! 🌟"
+        msg.className =
+          "mt-8 text-center text-3xl font-black text-green-600 transition-all transform scale-100"
+        showConfetti()
+      } else {
+        playSound("wrong")
+        msg.textContent = "SAI RỒI! THỬ LẠI NHÉ! ❌"
+        msg.className =
+          "mt-8 text-center text-3xl font-black text-red-500 transition-all transform scale-100"
       }
-    </script>
-  </body>
+    }
+
+    function resetApp() {
+      ;["inputA", "inputB", "inputC"].forEach((id) => {
+        const el = document.getElementById(id)
+        el.value = ""
+        el.classList.remove("correct", "incorrect")
+      })
+      document.getElementById("message").style.transform = "scale(0)"
+      document.getElementById("confetti").style.display = "none"
+    }
+
+    function showConfetti() {
+      const c = document.getElementById("confetti")
+      c.style.display = "block"
+      setTimeout(() => {
+        c.style.display = "none"
+      }, 2000)
+    }
+  </script>
+</body>
+
 </html>
