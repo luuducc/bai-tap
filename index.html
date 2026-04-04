@@ -149,26 +149,11 @@
       </div>
     </div>
 
-    <p class="text-lg text-gray-700 mb-8 font-medium">
-      Hãy so sánh các số sau:
-    </p>
+    <!-- Fill number questions -->
+    <div id="fill-number-container"></div>
 
     <!-- Compare questions -->
-    <div id="quiz-container" class="grid sm:grid-cols-4 lg:grid-cols-6 gap-8 mb-8">
-      <!-- <div class="flex py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-50 rounded-xl">
-        <span>2</span>
-
-        <select id="select-1" onchange="onSelectChange('select-1')"
-          class="custom-select w-12 h-12 text-2xl border-2 border-gray-300 rounded-lg text-center leading-none">
-          <option value="">?</option>
-          <option value="<">&lt;</option>
-          <option value=">">&gt;</option>
-          <option value="=">=</option>
-        </select>
-
-        <span>4</span>
-      </div> -->
-    </div>
+    <div id="compare-quiz-container"></div>
 
     <!-- Nộp bài -->
     <div class="flex gap-4">
@@ -188,13 +173,18 @@
   <div id="confetti" class="confetti">✨🥳✨</div>
 
   <script type="module">
-    import { rawInputs } from './raw_input.js'
+    import { fillNumberQuestions, compareQuestions } from './raw_input.js'
 
     document.getElementById("submit-btn").addEventListener("click", checkAnswers)
     document.getElementById("reset-btn").addEventListener("click", resetApp)
     let audioCtx
 
-    const inputs = rawInputs.map((item, index) => {
+    const inputs1 = fillNumberQuestions.map((item, index) => ({
+      id: `fill-number-${index}`,
+      ...item
+    }))
+
+    const inputs2 = compareQuestions.map((item, index) => {
       if (item.op1 < item.op2) item.ans = '<'
       if (item.op1 > item.op2) item.ans = '>'
       if (item.op1 == item.op2) item.ans = '='
@@ -204,16 +194,23 @@
       }
     })
 
-    renderQuiz()
+    renderFillNumberQuiz()
+    renderCompareQuiz()
 
-    inputs.forEach(({ id }) => {
+    inputs2.forEach(({ id }) => {
       document.getElementById(id).addEventListener('change', id => onSelectChange(id))
     })
 
-    function renderQuiz() {
-      const container = document.getElementById("quiz-container")
+    function renderCompareQuiz() {
+      const container = document.getElementById("compare-quiz-container")
+      
+      const promptHTML = `
+        <p class="text-lg text-gray-700 mb-8 font-medium">
+          Hãy so sánh các số sau:
+        </p>
+      `
 
-      container.innerHTML = inputs.map(({ id, op1, op2 }) => `
+      const innerQuestionsHTML = inputs2.map(({ id, op1, op2 }) => `
         <div class="flex px-1 py-2 items-center justify-center gap-4 text-3xl font-black bg-gray-100 rounded-xl">
           <span>${op1}</span>
 
@@ -228,10 +225,54 @@
           <span>${op2}</span>
         </div>
       `).join("")
+
+      const questionHTML = `
+        <div class="grid sm:grid-cols-4 lg:grid-cols-6 gap-8 mb-8">
+          ${innerQuestionsHTML}
+        </div>
+      `
+
+      container.innerHTML = promptHTML + questionHTML
+    }
+
+    function renderFillNumberQuiz() {
+      const container = document.getElementById("fill-number-container")
+
+      container.innerHTML = inputs1.map(({ id, prompt, pictureUrl, unit, questions }) => {
+        const promptHTML = `
+          <p class="text-lg text-gray-700 mb-8 font-medium">
+            ${prompt}
+          </p>
+        `
+        const imageUrlHTML = `
+          <div class="w-full h-64 mb-4 bg-gray-100 flex items-center justify-center overflow-hidden rounded-xl">
+            <img src="${pictureUrl}" class="max-w-full max-h-full object-contain" alt="Hình ảnh đề bài" />
+          </div>
+        `
+
+        const innerQuestionsHTML = questions.map(question => `
+          <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all" id="">
+            <span class="text-lg font-bold text-gray-700">${question.label}</span>
+            <div class="flex items-center gap-2">
+              <input type="number" id="inputA"
+                class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
+                placeholder="?">
+              <span class="text-xl font-bold text-gray-500">${unit}</span>
+            </div>
+          </div>
+        `).join('')
+        
+        const questionsHTML = `
+          <div class="grid gap-4 mb-8">
+            ${innerQuestionsHTML}
+          </div>
+        `
+        return promptHTML + imageUrlHTML + questionsHTML
+      }).join("")
     }
 
     function onSelectChange(selectId) {
-      inputs.forEach(({id}) => {
+      inputs2.forEach(({ id }) => {
         document.getElementById(id).classList.remove('correct', 'incorrect', 'warning')
       })
 
@@ -319,7 +360,7 @@
 
       let correctCount = 0
 
-      const isAllAnswered = inputs.every(item => {
+      const isAllAnswered = inputs2.every(item => {
         return document.getElementById(item.id).value
       })
 
@@ -327,7 +368,7 @@
       msg.style.transform = "scale(1)"
 
       if (!isAllAnswered) {
-        inputs.forEach((item) => {
+        inputs2.forEach((item) => {
           const el = document.getElementById(item.id)
           if (!el.value) {
             el.classList.add("warning")
@@ -340,7 +381,7 @@
         return
       }
 
-      inputs.forEach((item) => {
+      inputs2.forEach((item) => {
         const el = document.getElementById(item.id)
 
         console.log('here', el.value)
@@ -355,7 +396,7 @@
         }
       })
 
-      if (correctCount === inputs.length) {
+      if (correctCount === inputs2.length) {
         playSound("correct")
         msg.textContent = "CHÍNH XÁC! GIỎI QUÁ! 🌟"
         msg.className =
@@ -370,7 +411,7 @@
     }
 
     function resetApp() {
-      inputs.forEach(({ id }) => {
+      inputs2.forEach(({ id }) => {
         const el = document.getElementById(id)
         el.value = ""
         el.classList.remove("correct", "incorrect", 'warning')
