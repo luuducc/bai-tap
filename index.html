@@ -128,7 +128,8 @@
       text-align: center;
       /* horizontal center */
       line-height: 3rem;
-      text-align-last: center; /* KEY for select */
+      text-align-last: center;
+      /* KEY for select */
       /* match height (h-12 = 48px ≈ 3rem) */
     }
   </style>
@@ -179,9 +180,13 @@
     document.getElementById("reset-btn").addEventListener("click", resetApp)
     let audioCtx
 
-    const inputs1 = fillNumberQuestions.map((item, index) => ({
-      id: `fill-number-${index}`,
-      ...item
+    const inputs1 = fillNumberQuestions.map((item1, index1) => ({
+      ...item1,
+      id: `fill-number-${index1}`,
+      questions: item1.questions.map((item2, index2) => ({
+        id: `fill-number-${index1}-${index2}`,
+        ...item2
+      }))
     }))
 
     const inputs2 = compareQuestions.map((item, index) => {
@@ -197,13 +202,19 @@
     renderFillNumberQuiz()
     renderCompareQuiz()
 
+
+    inputs1.forEach(item => 
+      item.questions.forEach(question => 
+        document.getElementById(question.id).addEventListener('change', onInputChange)
+      )
+    )
     inputs2.forEach(({ id }) => {
-      document.getElementById(id).addEventListener('change', id => onSelectChange(id))
+      document.getElementById(id).addEventListener('change', onInputChange)
     })
 
     function renderCompareQuiz() {
       const container = document.getElementById("compare-quiz-container")
-      
+
       const promptHTML = `
         <p class="text-lg text-gray-700 mb-8 font-medium">
           Hãy so sánh các số sau:
@@ -254,14 +265,14 @@
           <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl transition-all" id="">
             <span class="text-lg font-bold text-gray-700">${question.label}</span>
             <div class="flex items-center gap-2">
-              <input type="number" id="inputA"
+              <input type="number" inputmode="numeric" pattern="[0-9]*" id="${question.id}"
                 class="w-24 p-2 text-center text-2xl font-black border-2 border-gray-300 rounded-lg focus:border-purple-500"
                 placeholder="?">
               <span class="text-xl font-bold text-gray-500">${unit}</span>
             </div>
           </div>
         `).join('')
-        
+
         const questionsHTML = `
           <div class="grid gap-4 mb-8">
             ${innerQuestionsHTML}
@@ -271,7 +282,13 @@
       }).join("")
     }
 
-    function onSelectChange(selectId) {
+    function onInputChange() {
+      inputs1.forEach(item =>
+        item.questions.forEach(({ id}) => 
+          document.getElementById(id).classList.remove('correct', 'incorrect', 'warning')
+        )
+      )
+
       inputs2.forEach(({ id }) => {
         document.getElementById(id).classList.remove('correct', 'incorrect', 'warning')
       })
@@ -360,14 +377,30 @@
 
       let correctCount = 0
 
-      const isAllAnswered = inputs2.every(item => {
+      const isAllAnswered1 = inputs1.every((item) =>
+        item.questions.every((question) => {
+          const inputEl = document.getElementById(question.id)
+          return inputEl && inputEl.value
+        })
+      )
+
+      const isAllAnswered2 = inputs2.every(item => {
         return document.getElementById(item.id).value
       })
 
       const msg = document.getElementById("message")
       msg.style.transform = "scale(1)"
 
-      if (!isAllAnswered) {
+      if (!isAllAnswered1 || !isAllAnswered2) {
+        inputs1.forEach((item) => {
+          item.questions.forEach(question => {
+            const el = document.getElementById(question.id)
+            console.log('el', el.value)
+            if (!el.value) {
+              el.classList.add("warning")
+            }
+          })
+        })
         inputs2.forEach((item) => {
           const el = document.getElementById(item.id)
           if (!el.value) {
@@ -381,11 +414,24 @@
         return
       }
 
+      inputs1.forEach((item) => {
+        item.questions.forEach(question => {
+          const el = document.getElementById(question.id)
+
+          if (el.value == question.ans) {
+            el.classList.add("correct")
+            el.classList.remove("incorrect")
+            correctCount++
+          } else {
+            el.classList.add("incorrect")
+            el.classList.remove("correct")
+          }
+        })
+      })
+
       inputs2.forEach((item) => {
         const el = document.getElementById(item.id)
 
-        console.log('here', el.value)
-        console.log('here2', item.ans)
         if (el.value === item.ans) {
           el.classList.add("correct")
           el.classList.remove("incorrect")
@@ -396,7 +442,7 @@
         }
       })
 
-      if (correctCount === inputs2.length) {
+      if (correctCount === inputs1.reduce((acc, curr) => acc + curr.questions.length, 0) + inputs2.length) {
         playSound("correct")
         msg.textContent = "CHÍNH XÁC! GIỎI QUÁ! 🌟"
         msg.className =
@@ -411,6 +457,14 @@
     }
 
     function resetApp() {
+      inputs1.forEach((item) => {
+        item.questions.forEach(question => {
+          const el = document.getElementById(question.id)
+          el.value = null
+          el.classList.remove("correct", "incorrect", 'warning')
+        })
+      })
+
       inputs2.forEach(({ id }) => {
         const el = document.getElementById(id)
         el.value = ""
